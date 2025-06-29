@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tf-notebook
+  labels:
+    app: tf-notebook
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    name: http
+    targetPort: 8888
+    nodePort: 30001
+  selector:
+    app: tf-notebook
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tf-notebook
+  labels:
+    app: tf-notebook
+spec:
+  automountServiceAccountToken: false
+  securityContext:
+    fsGroup: 0
+  runtimeClassName: nvidia
+  containers:
+  - name: tf-notebook
+    image: docker.io/erlk1ng/jupyter:0.0.4
+    resources:
+      limits:
+        memory: "8192"
+        cpu: "2"
+        nvidia.com/gpu: 1
+    ports:
+    - containerPort: 8888
+      name: notebook
+    env:
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: all
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: all
