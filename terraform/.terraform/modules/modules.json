@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"k3s_master","Source":"./modules/k3s_master","Dir":"modules/k3s_master"},{"Key":"k3s_workers","Source":"./modules/k3s_workers","Dir":"modules/k3s_workers"}]}

@@ -1,0 +1,22 @@
+#cloud-config
+hostname: k3s-master
+users:
+  - name: ubuntu
+    groups: [sudo]
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_key}
+runcmd:
+  - curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} sh -s - server --cluster-init
+
+# cloudinit_worker.yaml.tftpl example:
+#cloud-config
+hostname: ${hostname}
+users:
+  - name: ubuntu
+    groups: [sudo]
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_key}
+runcmd:
+  - curl -sfL https://get.k3s.io | K3S_URL=${k3s_server} K3S_TOKEN=${k3s_token} sh -s - agent
