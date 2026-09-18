@@ -123,6 +123,21 @@ We welcome community contributions! Please follow these steps:
 - [Proxmox VE](https://www.proxmox.com/)
 - [K3s](https://k3s.io/)
 
+## Citation
+
+If you use this repository, please cite the following publication:
+
+```bibtex
+@article{kramer2025reproducible,
+  author    = {Julian Kramer and Tianxiang Lu},
+  title     = {A Reproducible Framework for Benchmarking MLOps Infrastructures: Comparing Bare-Metal and Orchestrated ML Workflows},
+  journal   = {Cureus Journal of Computer Science},
+  year      = {2025},
+  publisher = {Springer Nature},
+  doi       = {10.7759/s44389-025-08693-x}
+}
+```
+https://doi.org/10.7759/s44389-025-08693-x
 ---
 
 📬 For questions or support, please open an issue or contact us via GitHub.
