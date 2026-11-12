@@ -1,8 +1,6 @@
 ## Overview
 
-This repository provides a set of **Terraform modules** for deploying a production-ready, on-premise **Kubeflow** environment using **Proxmox VE** as the virtualization platform. It automates the creation of virtual machines, Kubernetes installation (via k3s), and Kubeflow deployment with GPU passthrough support.
-
-Designed for **reproducibility, flexibility**, and **infrastructure-as-code (IaC)** principles.
+This repository provides **Terraform modules for a reproducible on-prem Kubeflow environment on Proxmox VE (k3s, GPU passthrough), accompanying the paper below**. It automates the creation of virtual machines, Kubernetes (k3s) installation, and Kubeflow deployment with optional GPU passthrough support, following infrastructure-as-code (IaC) principles.
 
 ## Architecture
 
@@ -44,58 +42,70 @@ Designed for **reproducibility, flexibility**, and **infrastructure-as-code (IaC
 - Existing storage pool on Proxmox
 - [Optional] Local DNS or external ingress setup
 
+
 ## Repository Structure
 
 ```
 terraform_kubeflow_onpremise/
-├── environments/        # Env-specific configs (e.g., dev, prod)
-├── modules/
-│   ├── k3s_master/      # Proxmox + k3s master node module
-│   ├── k3s_worker/      # Proxmox + k3s worker nodes module
-│   └── kubeflow/        # Kubeflow installation via kustomize
-├── secrets/             # Encrypted variables (Vault)
-├── scripts/             # Helper scripts (e.g., config sync)
+├── experiment/           # Experiment results and test clusters
+│   ├── MulitNodeClusterTest/   # Multi-node test artifacts
+│   ├── MultiNodecluster_merged_training_metrics.csv
+│   ├── Single_node_training_metrics.csv
+│   └── SingleNodeTest/        # Single-node test artifacts
+├── kubeflow/             # ML workflow scripts and Kubeflow workloads
+│   ├── MultiNodeTest.py       # Distributed TF training example
+│   ├── SingleNodeTest.py      # Single-node TF training example
+│   └── tf-notebook.yaml       # Jupyter notebook deployment spec
+├── terraform/             # Main Terraform configuration
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── terraform.tfvars       # (Needs user configuration/fix)
+│   └── modules/               # Module subdirectory for cluster/kubeflow infra
 └── README.md
 ```
 
+**experiment/** contains test outputs and reproducibility artifacts for ML benchmarking.
+
+**kubeflow/** contains scripts and manifests used for real ML jobs and interactive notebooks on the deployed Kubeflow platform.
+
+**terraform/** is the entry point for all infrastructure provisioning. All `terraform` commands should be run from this directory.
+
+
 ## Usage
 
-1. **Clone this repo**
+1. **Clone this repository**
+   ```bash
+   git clone https://github.com/Prof-it/terraform_kubeflow_onpremise.git
+   ```
 
-```bash
-git clone https://github.com/Prof-it/terraform_kubeflow_onpremise.git
-cd terraform_kubeflow_onpremise/environments/dev
-```
-
-2. **Configure variables**
-
-Edit the `terraform.tfvars` or `main.tf` to set:
-- Proxmox credentials
-- VM specs (CPU, RAM, disk)
-- SSH keys
-- Cluster name
+2. **Configure Terraform**
+   - Change directory to the Terraform config:
+     ```bash
+     cd terraform_kubeflow_onpremise/terraform
+     ```
+   - Edit `terraform.tfvars` (create/fix as needed) and variables (`main.tf`, `variables.tf`) to set:
+     - Proxmox credentials
+     - VM specs (CPU, RAM, disk)
+     - SSH keys
+     - Cluster name
 
 3. **Initialize Terraform**
-
-```bash
-terraform init
-```
+   ```bash
+   terraform init
+   ```
 
 4. **Review the plan**
-
-```bash
-terraform plan
-```
+   ```bash
+   terraform plan
+   ```
 
 5. **Apply the infrastructure**
-
-```bash
-terraform apply
-```
+   ```bash
+   terraform apply
+   ```
 
 6. **Access Kubeflow**
-
-After successful deployment, Kubeflow will be accessible via the configured load balancer or ingress IP/domain.
+   - After successful deployment, Kubeflow will be accessible via the configured load balancer or ingress IP/domain.
 
 ## Secrets Management
 
@@ -130,14 +140,17 @@ If you use this repository, please cite the following publication:
 ```bibtex
 @article{kramer2025reproducible,
   author    = {Julian Kramer and Tianxiang Lu},
-  title     = {A Reproducible Framework for Benchmarking MLOps Infrastructures: Comparing Bare-Metal and Orchestrated ML Workflows},
+  title     = {A Reproducible Framework for Benchmarking Machine Learning Operations (MLOps) Infrastructures: Comparing Bare-Metal and Orchestrated Machine Learning Workflows},
   journal   = {Cureus Journal of Computer Science},
   year      = {2025},
   publisher = {Springer Nature},
   doi       = {10.7759/s44389-025-08693-x}
 }
 ```
-https://doi.org/10.7759/s44389-025-08693-x
+
+Open Access: [https://doi.org/10.7759/s44389-025-08693-x](https://doi.org/10.7759/s44389-025-08693-x)
+
+
 ---
 
 📬 For questions or support, please open an issue or contact us via GitHub.
